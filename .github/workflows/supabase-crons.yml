@@ -1,26 +1,32 @@
-name: Supabase CRONs
+name: Supabase CRONs PROD
 
 on:
   schedule:
-    - cron: "* * * * *"   # toutes les minutes
+    - cron: "* * * * *"   # chaque minute
 jobs:
   run-crons:
     runs-on: ubuntu-latest
     steps:
       - name: Call calculate-daily-earnings
         run: |
-          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/calculate-daily-earnings" \
+          curl -s -o response.json -w "%{http_code}" -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/calculate-daily-earnings" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
             -H "Content-Type: application/json"
+          echo "Response:"
+          cat response.json
 
       - name: Call process-referral-bonuses
         run: |
-          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/check-staking-maturity" \
+          curl -s -o response.json -w "%{http_code}" -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/check-staking-maturity" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
             -H "Content-Type: application/json"
+          echo "Response:"
+          cat response.json
 
       - name: Call handle-payment-webhook
         run: |
-          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/catch-up-earnings" \
+          curl -s -o response.json -w "%{http_code}" -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/catch-up-earnings" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
             -H "Content-Type: application/json"
+          echo "Response:"
+          cat response.json
