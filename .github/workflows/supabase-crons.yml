@@ -1,0 +1,26 @@
+name: Supabase CRONs
+
+on:
+  schedule:
+    - cron: "* * * * *"   # toutes les minutes
+jobs:
+  run-crons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call calculate-daily-earnings
+        run: |
+          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/calculate-daily-earnings" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json"
+
+      - name: Call process-referral-bonuses
+        run: |
+          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/check-staking-maturity" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json"
+
+      - name: Call handle-payment-webhook
+        run: |
+          curl -X POST "https://rmnarrqtrmghuqehdtnv.supabase.co/functions/v1/catch-up-earnings" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json"
