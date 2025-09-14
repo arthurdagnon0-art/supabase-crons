@@ -2,7 +2,7 @@ name: Supabase CRONs PROD
 
 on:
   schedule:
-    - cron: "* * * * *"   # chaque minute
+    - cron: "0 0 * * *"   # tous les jours à minuit UTC
 jobs:
   run-crons:
     runs-on: ubuntu-latest
